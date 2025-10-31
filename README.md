@@ -39,24 +39,3 @@ npm run preview
 npm run lint
 ```
 
-## Production Build
-
-The application is optimized for production with:
-
-- Code splitting for optimal loading
-- Minified bundles
-- Error boundary for graceful error handling
-- SEO meta tags and Open Graph support
-- Accessibility features (ARIA labels, keyboard navigation)
-- Production-optimized Vite configuration
-
-## Browser Support
-
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
-
-## License
-
-Private project
