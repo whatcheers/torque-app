@@ -37,5 +37,15 @@ npm run preview
 
 # Lint code
 npm run lint
+
+# Bundle installable PWA (copy dist/ to hosting)
+npm run build
 ```
+
+## Progressive Web App
+
+- `public/site.webmanifest` and `public/service-worker.js` enable add-to-home-screen plus offline caching.
+- Deploy the `dist/` folder to HTTPS hosting; browsers will surface an Install button and run the service worker.
+- Service worker registration only runs in production builds and is skipped inside the browser extension.
+- Replace the placeholder icons referenced in the manifest with branded `192x192` and `512x512` PNGs for best install prompts.
 

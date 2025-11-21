@@ -1,0 +1,23 @@
+{
+  "name": "Bottle Cap Torque Calculator",
+  "short_name": "TorqueCalc",
+  "description": "Calculate bottle cap application and removal torque with table and rule modes.",
+  "start_url": ".",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/vite.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
