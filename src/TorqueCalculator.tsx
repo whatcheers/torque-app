@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Info, Calculator } from "lucide-react";
+import { Info, Calculator, Menu } from "lucide-react";
 
 // Reference ranges compiled from industry sources for common closure sizes (mm)
 // Values are application torque in in-lb.
@@ -54,6 +54,7 @@ export default function TorqueCalculator() {
   const [removalPct, setRemovalPct] = useState<[number]>([50]); // expected removal as % of application
   const [debugMode, setDebugMode] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>("operator");
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
   const updateDiameter = (value: number) => setDiameter(clamp(value, DIAMETER_RANGE.min, DIAMETER_RANGE.max));
   const adjustDiameter = (delta: number) => setDiameter((prev) => clamp(prev + delta, DIAMETER_RANGE.min, DIAMETER_RANGE.max));
@@ -549,33 +550,73 @@ export default function TorqueCalculator() {
         </header>
 
         <Card className="shadow-sm">
-          <CardContent className="p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
-                  Debug mode
-                </p>
-                <p className="text-xs text-slate-500">
-                  Slide to reveal advanced controls
-                </p>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <div>
+              <CardTitle className="text-lg sm:text-xl">Settings</CardTitle>
+              <p className="text-xs text-slate-500">Quick configuration</p>
+            </div>
+            <Button
+              variant="ghost"
+              className="h-10 w-10 p-0"
+              onClick={() => setSettingsOpen((prev) => !prev)}
+              aria-expanded={settingsOpen}
+              aria-label="Toggle settings"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </CardHeader>
+          {settingsOpen && (
+            <CardContent className="space-y-6 pt-0">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
+                      Debug mode
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      Slide to reveal advanced controls
+                    </p>
+                  </div>
+                  <span className="text-lg font-semibold">
+                    {viewMode === "debug" ? "On" : "Off"}
+                  </span>
+                </div>
+                <Slider
+                  min={0}
+                  max={1}
+                  step={1}
+                  value={[viewMode === "debug" ? 1 : 0]}
+                  onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
+                  aria-label="Toggle debug mode"
+                />
+                <div className="flex justify-between text-xs text-slate-400">
+                  <span>Operator</span>
+                  <span>Debug</span>
+                </div>
               </div>
-              <span className="text-lg font-semibold">
-                {viewMode === "debug" ? "On" : "Off"}
-              </span>
-            </div>
-            <Slider
-              min={0}
-              max={1}
-              step={1}
-              value={[viewMode === "debug" ? 1 : 0]}
-              onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
-              aria-label="Toggle debug mode"
-            />
-            <div className="flex justify-between text-xs text-slate-400">
-              <span>Operator</span>
-              <span>Debug</span>
-            </div>
-          </CardContent>
+
+              <div className="space-y-3">
+                <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
+                  Units
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {(Object.keys(UNIT_LABELS) as Units[]).map((unit) => (
+                    <Button
+                      key={unit}
+                      variant={units === unit ? "default" : "outline"}
+                      className="h-16 text-lg flex flex-col"
+                      onClick={() => setUnits(unit)}
+                    >
+                      <span className="text-lg font-semibold">{UNIT_LABELS[unit].label}</span>
+                      <span className="text-xs text-white/80">
+                        {UNIT_LABELS[unit].description}
+                      </span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          )}
         </Card>
 
         {viewMode === "operator" ? renderOperatorMode() : renderDebugMode()}
