@@ -4,7 +4,8 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/torque-app/',
+  // Use '/' for extension, '/torque-app/' for web deployment
+  base: process.env.BUILD_TARGET === 'extension' ? '/' : '/torque-app/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -24,6 +25,8 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
+    // For extensions, copy manifest.json and icons to dist
+    copyPublicDir: true,
   },
   optimizeDeps: {
     include: ['react', 'react-dom', '@radix-ui/react-select', '@radix-ui/react-slider'],

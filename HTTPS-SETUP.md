@@ -144,3 +144,9 @@ The configuration includes:
 - ✅ Security headers (XSS protection, frame options, etc.)
 
 
+
+
+
+
+
+

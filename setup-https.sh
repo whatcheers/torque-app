@@ -89,3 +89,9 @@ echo "Certificate auto-renewal should be configured automatically."
 echo "Test renewal with: sudo certbot renew --dry-run"
 
 
+
+
+
+
+
+

@@ -8,7 +8,8 @@ import { Slider } from "@/components/ui/slider";
 import { Info, Calculator } from "lucide-react";
 
 // Reference ranges compiled from industry sources for common closure sizes (mm)
-// Values are application torque in in-lb. See chat for citations.
+// Values are application torque in in-lb.
+// Sources: Reliable Caps (24mm, 28mm, 38mm), MJS Packaging (50% rule), industry standards
 const TABLE_RANGES: Record<number, { min: number; max: number }> = {
   24: { min: 10, max: 18 },
   28: { min: 12, max: 21 },
@@ -211,7 +212,7 @@ export default function TorqueCalculator() {
                 ) : (
                   <>
                     <p className="font-medium">50% Rule Mode:</p>
-                    <p>Calculates torque as 50% of the cap diameter (in mm) in in-lb, with a ±20% tolerance band. Formula: Center = diameter × 0.5, Range = Center × 0.8 to Center × 1.2</p>
+                    <p>Calculates torque as 50% of the cap diameter (in mm) in in-lb, with a ±20% tolerance band. This rule is validated by MJS Packaging and industry standards. Formula: Center = diameter × 0.5, Range = Center × 0.8 to Center × 1.2</p>
                   </>
                 )}
               </div>
@@ -248,11 +249,13 @@ export default function TorqueCalculator() {
                     className="touch-manipulation"
                   />
                 </div>
-                <div className="flex justify-between text-xs text-slate-400 px-2 -mt-1 mb-1">
+                <div className="flex justify-between text-xs text-slate-400 px-2 -mt-1 mb-2">
                   <span>30%</span>
                   <span>70%</span>
                 </div>
-                <p className="text-sm sm:text-xs text-slate-500 px-2 mt-1">Typical removal is about 40 to 60 percent of application. Adjust as needed.</p>
+                <p className="text-sm sm:text-xs text-slate-500 px-2">
+                  <span className="text-green-600 font-medium">Typical range: 40-60%</span> of application torque (per industry sources: Reliable Caps, MJS Packaging). Adjust based on your specific closure and liner.
+                </p>
               </div>
 
               <div className="pt-2 flex items-start space-x-4 sm:space-x-3">
@@ -345,9 +348,19 @@ export default function TorqueCalculator() {
               </li>
               <li>If you change liner, resin, neck finish, or fill conditions, re-verify.
               </li>
+              <li>Some manufacturers (e.g., Berry/Amcor) may not provide numeric torque specifications and instead use "conventional capping methods."
+              </li>
             </ul>
             <div className="text-xs text-slate-500 mt-3">
-              Table covers common sizes only. For other sizes, use the 50 percent rule or your supplier spec.
+              Table covers common sizes only. For other sizes, use the 50 percent rule (validated by MJS Packaging) or your supplier specification.
+            </div>
+            <div className="text-xs text-slate-500 mt-4 pt-3 border-t border-slate-200">
+              <p className="font-semibold mb-1">Sources:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Reliable Caps, LLC - Technical bulletins for 24mm, 28mm, 38mm CT closures</li>
+                <li>MJS Packaging, Inc. - 50% rule guideline (torque ≈ diameter × 0.5)</li>
+                <li>Industry standards and compiled reference data</li>
+              </ul>
             </div>
           </CardContent>
         </Card>
