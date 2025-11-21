@@ -10,9 +10,8 @@ A production-ready web application for calculating bottle cap application and re
   - Automatic fallback to rule when table entry unavailable
 
 - **Unit Support**:
-  - Inch-pounds (in-lb)
-  - Newton-meters (N·m)
-  - Kilogram-force centimeters (kgf·cm)
+  - US customary (in-lb)
+  - Metric (N·m)
 
 - **Advanced Features**:
   - Debug mode showing step-by-step calculations

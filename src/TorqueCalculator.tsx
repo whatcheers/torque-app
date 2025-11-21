@@ -24,16 +24,13 @@ const TABLE_RANGES: Record<number, { min: number; max: number }> = {
 };
 
 type Mode = "table" | "rule";
-type Units = "inlb" | "N·m" | "kgf·cm";
+type Units = "inlb" | "N·m";
 type ViewMode = "operator" | "debug";
 
 const toNm = (inlb: number) => inlb * 0.113; // 1 in-lb ≈ 0.113 N·m
-const toKgfcm = (inlb: number) => inlb * 1.1521; // 1 in-lb ≈ 1.1521 kgf·cm
-
 function convert(inlb: number, units: Units) {
   if (units === "inlb") return inlb;
-  if (units === "N·m") return toNm(inlb);
-  return toKgfcm(inlb);
+  return toNm(inlb);
 }
 
 function fmt(value: number, units: Units) {
@@ -45,10 +42,9 @@ function fmt(value: number, units: Units) {
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const DIAMETER_RANGE = { min: 10, max: 130 };
 const REMOVAL_RANGE = { min: 30, max: 70 };
-const UNIT_LABELS: Record<Units, string> = {
-  inlb: "in-lb",
-  "N·m": "N·m",
-  "kgf·cm": "kgf·cm",
+const UNIT_LABELS: Record<Units, { label: string; description: string }> = {
+  inlb: { label: "US", description: "in-lb" },
+  "N·m": { label: "Metric", description: "N·m" },
 };
 
 export default function TorqueCalculator() {
@@ -122,19 +118,11 @@ export default function TorqueCalculator() {
     if (units !== "inlb") {
       calculationSteps.push("");
       calculationSteps.push(`Unit Conversion (${units}):`);
-      if (units === "N·m") {
-        calculationSteps.push("Conversion factor: 1 in-lb = 0.113 N·m");
-        calculationSteps.push(`Application min: ${appRange.min.toFixed(2)} × 0.113 = ${convert(appRange.min, units).toFixed(3)} N·m`);
-        calculationSteps.push(`Application max: ${appRange.max.toFixed(2)} × 0.113 = ${convert(appRange.max, units).toFixed(3)} N·m`);
-        calculationSteps.push(`Removal min: ${removal.min.toFixed(2)} × 0.113 = ${convert(removal.min, units).toFixed(3)} N·m`);
-        calculationSteps.push(`Removal max: ${removal.max.toFixed(2)} × 0.113 = ${convert(removal.max, units).toFixed(3)} N·m`);
-      } else {
-        calculationSteps.push("Conversion factor: 1 in-lb = 1.1521 kgf·cm");
-        calculationSteps.push(`Application min: ${appRange.min.toFixed(2)} × 1.1521 = ${convert(appRange.min, units).toFixed(1)} kgf·cm`);
-        calculationSteps.push(`Application max: ${appRange.max.toFixed(2)} × 1.1521 = ${convert(appRange.max, units).toFixed(1)} kgf·cm`);
-        calculationSteps.push(`Removal min: ${removal.min.toFixed(2)} × 1.1521 = ${convert(removal.min, units).toFixed(1)} kgf·cm`);
-        calculationSteps.push(`Removal max: ${removal.max.toFixed(2)} × 1.1521 = ${convert(removal.max, units).toFixed(1)} kgf·cm`);
-      }
+      calculationSteps.push("Conversion factor: 1 in-lb = 0.113 N·m");
+      calculationSteps.push(`Application min: ${appRange.min.toFixed(2)} × 0.113 = ${convert(appRange.min, units).toFixed(3)} N·m`);
+      calculationSteps.push(`Application max: ${appRange.max.toFixed(2)} × 0.113 = ${convert(appRange.max, units).toFixed(3)} N·m`);
+      calculationSteps.push(`Removal min: ${removal.min.toFixed(2)} × 0.113 = ${convert(removal.min, units).toFixed(3)} N·m`);
+      calculationSteps.push(`Removal max: ${removal.max.toFixed(2)} × 0.113 = ${convert(removal.max, units).toFixed(3)} N·m`);
     }
 
     return {
@@ -241,43 +229,21 @@ export default function TorqueCalculator() {
             <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
               Units
             </p>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {(Object.keys(UNIT_LABELS) as Units[]).map((unit) => (
                 <Button
                   key={unit}
                   variant={units === unit ? "default" : "outline"}
-                  className="h-14 text-lg"
+                  className="h-16 text-lg flex flex-col"
                   onClick={() => setUnits(unit)}
                 >
-                  {UNIT_LABELS[unit]}
+                  <span className="text-lg font-semibold">{UNIT_LABELS[unit].label}</span>
+                  <span className="text-xs text-white/80">
+                    {UNIT_LABELS[unit].description}
+                  </span>
                 </Button>
               ))}
             </div>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
-                Removal percent
-              </p>
-              <span className="text-3xl font-bold text-primary">{removalPct[0]}%</span>
-            </div>
-            <Slider
-              value={removalPct}
-              min={REMOVAL_RANGE.min}
-              max={REMOVAL_RANGE.max}
-              step={1}
-              onValueChange={(v) => updateRemovalPct(v[0])}
-              aria-label="Adjust expected removal percent"
-              className="touch-manipulation"
-            />
-            <div className="flex justify-between text-xs text-slate-400">
-              <span>{REMOVAL_RANGE.min}%</span>
-              <span>{REMOVAL_RANGE.max}%</span>
-            </div>
-            <p className="text-xs text-slate-500">
-              Most lines run 40–60% of application torque. Adjust for your closure.
-            </p>
           </div>
         </CardContent>
       </Card>
@@ -289,7 +255,7 @@ export default function TorqueCalculator() {
               Application torque
             </p>
             <p className="text-3xl font-bold break-words" aria-live="polite" aria-atomic="true">
-              {fmt(appRange.min, units)} – {fmt(appRange.max, units)} {UNIT_LABELS[units]}
+              {fmt(appRange.min, units)} – {fmt(appRange.max, units)} {UNIT_LABELS[units].description}
             </p>
             {!hasExact && mode === "table" && (
               <p className="text-xs text-amber-600 flex items-start gap-1">
@@ -304,9 +270,11 @@ export default function TorqueCalculator() {
               Removal torque
             </p>
             <p className="text-3xl font-bold break-words" aria-live="polite" aria-atomic="true">
-              {fmt(removal.min, units)} – {fmt(removal.max, units)} {UNIT_LABELS[units]}
+              {fmt(removal.min, units)} – {fmt(removal.max, units)} {UNIT_LABELS[units].description}
             </p>
-            <p className="text-xs text-slate-500">Removal = application × {removalPct[0]}%.</p>
+            <p className="text-xs text-slate-500">
+              Removal = application × {removalPct[0]}% (adjust in Debug mode).
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -412,7 +380,6 @@ export default function TorqueCalculator() {
                 <SelectContent>
                   <SelectItem value="inlb">in-lb</SelectItem>
                   <SelectItem value="N·m">N·m</SelectItem>
-                  <SelectItem value="kgf·cm">kgf·cm</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -471,7 +438,7 @@ export default function TorqueCalculator() {
           <div className="space-y-2" role="region" aria-label="Application torque results">
             <p className="text-sm font-medium">Application torque range</p>
             <p className="text-xl sm:text-2xl font-semibold break-words" aria-live="polite" aria-atomic="true">
-              {fmt(appRange.min, units)} - {fmt(appRange.max, units)} {units}
+              {fmt(appRange.min, units)} - {fmt(appRange.max, units)} {UNIT_LABELS[units].description}
             </p>
             {!hasExact && mode === "table" && (
               <p className="text-xs text-amber-600 flex items-start gap-1 mt-2" role="alert">
@@ -484,7 +451,7 @@ export default function TorqueCalculator() {
           <div className="space-y-2" role="region" aria-label="Removal torque results">
             <p className="text-sm font-medium">Estimated removal torque</p>
             <p className="text-xl sm:text-2xl font-semibold break-words" aria-live="polite" aria-atomic="true">
-              {fmt(removal.min, units)} - {fmt(removal.max, units)} {units}
+              {fmt(removal.min, units)} - {fmt(removal.max, units)} {UNIT_LABELS[units].description}
             </p>
             <p className="text-xs text-slate-500">
               Removal is computed as application multiplied by your percent slider.
@@ -581,24 +548,35 @@ export default function TorqueCalculator() {
           </p>
         </header>
 
-        <div className="bg-white/80 rounded-full p-1 flex gap-1 shadow-inner">
-          <Button
-            className="flex-1 h-12 text-sm sm:text-base"
-            variant={viewMode === "operator" ? "default" : "ghost"}
-            onClick={() => setViewMode("operator")}
-            aria-pressed={viewMode === "operator"}
-          >
-            Operator mode
-          </Button>
-          <Button
-            className="flex-1 h-12 text-sm sm:text-base"
-            variant={viewMode === "debug" ? "default" : "ghost"}
-            onClick={() => setViewMode("debug")}
-            aria-pressed={viewMode === "debug"}
-          >
-            Debug mode
-          </Button>
-        </div>
+        <Card className="shadow-sm">
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
+                  Debug mode
+                </p>
+                <p className="text-xs text-slate-500">
+                  Slide to reveal advanced controls
+                </p>
+              </div>
+              <span className="text-lg font-semibold">
+                {viewMode === "debug" ? "On" : "Off"}
+              </span>
+            </div>
+            <Slider
+              min={0}
+              max={1}
+              step={1}
+              value={[viewMode === "debug" ? 1 : 0]}
+              onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
+              aria-label="Toggle debug mode"
+            />
+            <div className="flex justify-between text-xs text-slate-400">
+              <span>Operator</span>
+              <span>Debug</span>
+            </div>
+          </CardContent>
+        </Card>
 
         {viewMode === "operator" ? renderOperatorMode() : renderDebugMode()}
       </div>
