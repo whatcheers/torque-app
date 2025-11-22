@@ -1,5 +1,5 @@
 const WINDOW_ID_KEY = 'torque-app-window-id'
-const WINDOW_DIMENSIONS = { width: 640, height: 860 }
+const WINDOW_DIMENSIONS = { width: 640, height: 900 }
 
 async function getStoredWindowId() {
   return new Promise((resolve) => {
