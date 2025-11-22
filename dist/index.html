@@ -2,26 +2,62 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="/torque-app/vite.svg" />
+    <link rel="manifest" href="/torque-app/site.webmanifest" />
     <meta name="theme-color" content="#0f172a" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
     <style>
-      /* Extension popup sizing */
+      /* Base styles - responsive for web/mobile */
       html,
       body {
-        width: 600px;
-        height: 900px;
         margin: 0;
         padding: 0;
-        overflow: hidden;
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
       }
+      
       #root {
         width: 100%;
-        height: 100%;
-        overflow: hidden;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
+      }
+      
+      /* When in extension mode, apply fixed dimensions */
+      body.extension-mode {
+        width: 600px;
+        height: 900px;
+        min-height: 900px;
+        overflow: hidden;
+      }
+      
+      body.extension-mode #root {
+        height: 100%;
+        overflow: hidden;
+      }
+      
+      /* Responsive adjustments for mobile web */
+      @media (max-width: 640px) {
+        html, body {
+          min-height: 100vh;
+          height: auto;
+        }
+      }
+      
+      /* Desktop web - constrain max width and center */
+      @media (min-width: 641px) {
+        body:not(.extension-mode) {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          padding: 1rem;
+        }
+        
+        body:not(.extension-mode) #root {
+          max-width: 800px;
+          width: 100%;
+        }
       }
     </style>
     <meta name="description" content="Calculate bottle cap application and removal torque from cap diameter. Supports US and metric units with industry-standard reference tables." />
@@ -39,12 +75,22 @@
     <meta property="twitter:description" content="Quickly estimate application and removal torque from cap diameter." />
     
     <title>Bottle Cap Torque Calculator - Application & Removal Torque Estimator</title>
-    <script type="module" crossorigin src="/assets/index-BAYMfp_F.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/react-vendor-DrH7PivC.js">
-    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-B5yI8i_L.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-DOVi7tyC.css">
+    <script type="module" crossorigin src="/torque-app/assets/index-DoOt4cRr.js"></script>
+    <link rel="modulepreload" crossorigin href="/torque-app/assets/react-vendor-DrH7PivC.js">
+    <link rel="modulepreload" crossorigin href="/torque-app/assets/ui-vendor-B5yI8i_L.js">
+    <link rel="stylesheet" crossorigin href="/torque-app/assets/index-lGLD8mB7.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Detect if we're in extension mode and apply class
+      (function() {
+        if (window.location.protocol === 'chrome-extension:' || 
+            window.location.protocol === 'moz-extension:' ||
+            window.location.href.includes('extension://')) {
+          document.body.classList.add('extension-mode');
+        }
+      })();
+    </script>
   </body>
 </html>

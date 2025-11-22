@@ -31,15 +31,29 @@
   * {
     border-color: hsl(var(--border));
   }
+  html {
+    /* Ensure html takes full height */
+    height: 100%;
+  }
   body {
     @apply bg-background text-foreground;
     /* Prevent horizontal scrolling on mobile */
     overflow-x: hidden;
+    /* Allow vertical scrolling when needed */
+    overflow-y: auto;
     /* Improve touch scrolling */
     -webkit-overflow-scrolling: touch;
     /* Improve font rendering on mobile */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Ensure body takes full height when not in extension mode */
+    min-height: 100%;
+  }
+  
+  /* Extension mode overrides */
+  body.extension-mode {
+    overflow: hidden;
+    height: 900px;
   }
   
   /* Prevent text size adjustment on iOS */
