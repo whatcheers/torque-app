@@ -225,27 +225,6 @@ export default function TorqueCalculator() {
                 : "Torque ≈ diameter × 0.5 with ±20% tolerance band."}
             </p>
           </div>
-
-          <div className="space-y-3">
-            <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
-              Units
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              {(Object.keys(UNIT_LABELS) as Units[]).map((unit) => (
-                <Button
-                  key={unit}
-                  variant={units === unit ? "default" : "outline"}
-                  className="h-16 text-lg flex flex-col"
-                  onClick={() => setUnits(unit)}
-                >
-                  <span className="text-lg font-semibold">{UNIT_LABELS[unit].label}</span>
-                  <span className="text-xs text-white/80">
-                    {UNIT_LABELS[unit].description}
-                  </span>
-                </Button>
-              ))}
-            </div>
-          </div>
         </CardContent>
       </Card>
 
@@ -280,18 +259,75 @@ export default function TorqueCalculator() {
         </CardContent>
       </Card>
 
-      <div className="grid sm:grid-cols-2 gap-3">
-        <Button className="h-16 text-lg" onClick={handleCopyResults}>
-          Copy results JSON
-        </Button>
-        <Button
-          variant="secondary"
-          className="h-16 text-lg"
-          onClick={() => setViewMode("debug")}
-        >
-          Open debug view
-        </Button>
-      </div>
+      <Card className="shadow-sm">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+          <div>
+            <CardTitle className="text-lg sm:text-xl">Settings</CardTitle>
+            <p className="text-xs text-slate-500">Quick configuration</p>
+          </div>
+          <Button
+            variant="ghost"
+            className="h-10 w-10 p-0"
+            onClick={() => setSettingsOpen((prev) => !prev)}
+            aria-expanded={settingsOpen}
+            aria-label="Toggle settings"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </CardHeader>
+        {settingsOpen && (
+          <CardContent className="space-y-6 pt-0">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
+                    Debug mode
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Slide to reveal advanced controls
+                  </p>
+                </div>
+                <span className="text-lg font-semibold">
+                  {viewMode === "debug" ? "On" : "Off"}
+                </span>
+              </div>
+              <Slider
+                min={0}
+                max={1}
+                step={1}
+                value={[viewMode === "debug" ? 1 : 0]}
+                onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
+                aria-label="Toggle debug mode"
+              />
+              <div className="flex justify-between text-xs text-slate-400">
+                <span>Operator</span>
+                <span>Debug</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
+                Units
+              </p>
+              <div className="grid grid-cols-2 gap-3">
+                {(Object.keys(UNIT_LABELS) as Units[]).map((unit) => (
+                  <Button
+                    key={unit}
+                    variant={units === unit ? "default" : "outline"}
+                    className="h-16 text-lg flex flex-col"
+                    onClick={() => setUnits(unit)}
+                  >
+                    <span className="text-lg font-semibold">{UNIT_LABELS[unit].label}</span>
+                    <span className="text-xs text-white/80">
+                      {UNIT_LABELS[unit].description}
+                    </span>
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        )}
+      </Card>
     </div>
   );
 
@@ -548,76 +584,6 @@ export default function TorqueCalculator() {
             Quickly estimate application and removal torque from cap diameter.
           </p>
         </header>
-
-        <Card className="shadow-sm">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <div>
-              <CardTitle className="text-lg sm:text-xl">Settings</CardTitle>
-              <p className="text-xs text-slate-500">Quick configuration</p>
-            </div>
-            <Button
-              variant="ghost"
-              className="h-10 w-10 p-0"
-              onClick={() => setSettingsOpen((prev) => !prev)}
-              aria-expanded={settingsOpen}
-              aria-label="Toggle settings"
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-          </CardHeader>
-          {settingsOpen && (
-            <CardContent className="space-y-6 pt-0">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
-                      Debug mode
-                    </p>
-                    <p className="text-xs text-slate-500">
-                      Slide to reveal advanced controls
-                    </p>
-                  </div>
-                  <span className="text-lg font-semibold">
-                    {viewMode === "debug" ? "On" : "Off"}
-                  </span>
-                </div>
-                <Slider
-                  min={0}
-                  max={1}
-                  step={1}
-                  value={[viewMode === "debug" ? 1 : 0]}
-                  onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
-                  aria-label="Toggle debug mode"
-                />
-                <div className="flex justify-between text-xs text-slate-400">
-                  <span>Operator</span>
-                  <span>Debug</span>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
-                  Units
-                </p>
-                <div className="grid grid-cols-2 gap-3">
-                  {(Object.keys(UNIT_LABELS) as Units[]).map((unit) => (
-                    <Button
-                      key={unit}
-                      variant={units === unit ? "default" : "outline"}
-                      className="h-16 text-lg flex flex-col"
-                      onClick={() => setUnits(unit)}
-                    >
-                      <span className="text-lg font-semibold">{UNIT_LABELS[unit].label}</span>
-                      <span className="text-xs text-white/80">
-                        {UNIT_LABELS[unit].description}
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          )}
-        </Card>
 
         {viewMode === "operator" ? renderOperatorMode() : renderDebugMode()}
       </div>
