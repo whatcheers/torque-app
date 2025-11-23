@@ -153,7 +153,6 @@ export default function TorqueCalculator() {
   const [mode, setMode] = useState<Mode>("table");
   const [units, setUnits] = useState<Units>("inlb");
   const [removalPct, setRemovalPct] = useState<[number]>([50]); // expected removal as % of application
-  const [debugMode, setDebugMode] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>("operator");
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [spiSize, setSpiSize] = useState<number | null>(null);
@@ -282,7 +281,7 @@ export default function TorqueCalculator() {
   };
 
   const renderOperatorMode = () => (
-    <div className="space-y-2 h-full overflow-hidden">
+    <div className="space-y-2 sm:space-y-3">
       <Card className="shadow-sm">
         <CardContent className="space-y-4 p-4">
           <div className="space-y-2">
@@ -552,7 +551,7 @@ export default function TorqueCalculator() {
   );
 
   const renderDebugMode = () => (
-    <>
+    <div className="space-y-2 sm:space-y-3 pb-4">
         <Card className="shadow-sm">
           <CardHeader className="pb-3 sm:pb-6">
             <CardTitle className="text-xl sm:text-2xl">Inputs</CardTitle>
@@ -695,19 +694,6 @@ export default function TorqueCalculator() {
                 </p>
               </div>
 
-              <div className="pt-2 flex items-start space-x-4 sm:space-x-3">
-                <input
-                  type="checkbox"
-                  id="debug"
-                  checked={debugMode}
-                  onChange={(e) => setDebugMode(e.target.checked)}
-                  className="h-6 w-6 sm:h-5 sm:w-5 rounded border-gray-300 touch-manipulation mt-1 flex-shrink-0"
-                  aria-label="Enable debug mode to show calculation details"
-                />
-                <Label htmlFor="debug" className="cursor-pointer text-base sm:text-sm leading-tight pt-0.5">
-                  Show debug calculations
-                </Label>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -878,20 +864,20 @@ export default function TorqueCalculator() {
             Copy results JSON
           </Button>
         </div>
-    </>
+    </div>
   );
 
   return (
-    <div className="h-full w-full bg-gradient-to-b from-slate-50 to-white px-4 py-2 overflow-hidden">
-      <div className="mx-auto max-w-3xl space-y-2 h-full flex flex-col">
-        <header className="text-center flex-shrink-0 py-1">
-          <h1 className="text-xl font-bold tracking-tight leading-tight">Bottle Cap Torque Calculator</h1>
+    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-white px-2 sm:px-4 py-2 sm:py-4 h-full flex flex-col">
+      <div className="mx-auto max-w-3xl w-full space-y-2 sm:space-y-3 flex flex-col flex-1 min-h-0">
+        <header className="text-center flex-shrink-0 py-1 sm:py-2">
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-tight">Bottle Cap Torque Calculator</h1>
           <p className="text-xs text-slate-600 mt-0.5 px-2" role="doc-subtitle">
             Quickly estimate application and removal torque from cap diameter.
           </p>
         </header>
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-y-auto">
           {viewMode === "operator" ? renderOperatorMode() : renderDebugMode()}
         </div>
       </div>
