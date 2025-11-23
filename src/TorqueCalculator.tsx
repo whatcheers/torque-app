@@ -52,7 +52,6 @@ export default function TorqueCalculator() {
   const [mode, setMode] = useState<Mode>("table");
   const [units, setUnits] = useState<Units>("inlb");
   const [removalPct, setRemovalPct] = useState<[number]>([50]); // expected removal as % of application
-  const [debugMode, setDebugMode] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>("operator");
   const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
@@ -450,19 +449,6 @@ export default function TorqueCalculator() {
                 </p>
               </div>
 
-              <div className="pt-2 flex items-start space-x-4 sm:space-x-3">
-                <input
-                  type="checkbox"
-                  id="debug"
-                  checked={debugMode}
-                  onChange={(e) => setDebugMode(e.target.checked)}
-                  className="h-6 w-6 sm:h-5 sm:w-5 rounded border-gray-300 touch-manipulation mt-1 flex-shrink-0"
-                  aria-label="Enable debug mode to show calculation details"
-                />
-                <Label htmlFor="debug" className="cursor-pointer text-base sm:text-sm leading-tight pt-0.5">
-                  Show debug calculations
-                </Label>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -497,36 +483,34 @@ export default function TorqueCalculator() {
           </CardContent>
         </Card>
 
-        {debugMode && (
-          <Card className="shadow-sm border-blue-200 bg-blue-50/30">
-            <CardHeader className="pb-3 sm:pb-6">
-              <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                <Calculator className="h-5 w-5 flex-shrink-0" />
-                <span>Debug Calculations</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="bg-white p-3 sm:p-4 rounded border border-blue-200">
-                <p className="text-sm font-semibold mb-2 text-blue-900">
-                  Method Used: {debugInfo.calculationUsed}
-                </p>
-                <div className="space-y-1 text-xs font-mono text-slate-700 break-words">
-                  {debugInfo.steps.map((step, idx) => (
-                    <div key={idx} className={step === "" ? "h-2" : ""}>
-                      {step}
-                    </div>
-                  ))}
-                </div>
+        <Card className="shadow-sm border-blue-200 bg-blue-50/30">
+          <CardHeader className="pb-3 sm:pb-6">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Calculator className="h-5 w-5 flex-shrink-0" />
+              <span>Debug Calculations</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="bg-white p-3 sm:p-4 rounded border border-blue-200">
+              <p className="text-sm font-semibold mb-2 text-blue-900">
+                Method Used: {debugInfo.calculationUsed}
+              </p>
+              <div className="space-y-1 text-xs font-mono text-slate-700 break-words">
+                {debugInfo.steps.map((step, idx) => (
+                  <div key={idx} className={step === "" ? "h-2" : ""}>
+                    {step}
+                  </div>
+                ))}
               </div>
-              <div className="bg-white p-3 rounded border border-blue-200 overflow-x-auto">
-                <p className="text-xs font-semibold mb-2 text-blue-900">Raw Values (in-lb):</p>
-                <pre className="text-xs font-mono text-slate-700 whitespace-pre-wrap break-words">
-                  {JSON.stringify(debugInfo.rawValues, null, 2)}
-                </pre>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+            <div className="bg-white p-3 rounded border border-blue-200 overflow-x-auto">
+              <p className="text-xs font-semibold mb-2 text-blue-900">Raw Values (in-lb):</p>
+              <pre className="text-xs font-mono text-slate-700 whitespace-pre-wrap break-words">
+                {JSON.stringify(debugInfo.rawValues, null, 2)}
+              </pre>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card className="shadow-sm">
           <CardHeader className="pb-3 sm:pb-6">
