@@ -560,8 +560,8 @@ export default function TorqueCalculator() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-white px-2 sm:px-4 py-2 sm:py-4">
-      <div className="mx-auto max-w-3xl w-full space-y-2 sm:space-y-3 flex flex-col">
+    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-white px-2 sm:px-4 py-2 sm:py-4 h-full flex flex-col">
+      <div className="mx-auto max-w-3xl w-full space-y-2 sm:space-y-3 flex flex-col flex-1 min-h-0">
         <header className="text-center flex-shrink-0 py-1 sm:py-2">
           <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-tight">Bottle Cap Torque Calculator</h1>
           <p className="text-xs text-slate-600 mt-0.5 px-2" role="doc-subtitle">
