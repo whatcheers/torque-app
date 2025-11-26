@@ -89,7 +89,6 @@ const SPI_SPECS: Record<number, SPISpec> = {
 
 // Convert inches to mm for display
 const inchesToMm = (inches: number) => inches * 25.4;
-const mmToInches = (mm: number) => mm / 25.4;
 
 // Get SPI size from T dimension (outside diameter of thread)
 // Returns the closest matching SPI size based on T dimension in mm
@@ -281,7 +280,7 @@ export default function TorqueCalculator() {
   };
 
   const renderOperatorMode = () => (
-    <div className="space-y-2 sm:space-y-3">
+    <div className="space-y-2 sm:space-y-3 pb-4">
       <Card className="shadow-sm">
         <CardContent className="space-y-4 p-4">
           <div className="space-y-2">
@@ -780,7 +779,7 @@ export default function TorqueCalculator() {
           </Card>
         )}
 
-        {debugMode && (
+        {viewMode === "debug" && (
           <Card className="shadow-sm border-blue-200 bg-blue-50/30">
             <CardHeader className="pb-3 sm:pb-6">
               <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -868,16 +867,37 @@ export default function TorqueCalculator() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-white px-2 sm:px-4 py-2 sm:py-4 h-full flex flex-col">
+    <div className="min-h-screen w-full bg-gradient-to-b from-slate-50 to-white px-2 sm:px-4 py-2 sm:py-4 h-full flex flex-col overflow-y-auto">
       <div className="mx-auto max-w-3xl w-full space-y-2 sm:space-y-3 flex flex-col flex-1 min-h-0">
-        <header className="text-center flex-shrink-0 py-1 sm:py-2">
-          <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-tight">Bottle Cap Torque Calculator</h1>
-          <p className="text-xs text-slate-600 mt-0.5 px-2" role="doc-subtitle">
-            Quickly estimate application and removal torque from cap diameter.
-          </p>
+        <header className="text-center flex-shrink-0 py-1 sm:py-2 space-y-2">
+          <div>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight leading-tight">Bottle Cap Torque Calculator</h1>
+            <p className="text-xs text-slate-600 mt-0.5 px-2" role="doc-subtitle">
+              Quickly estimate application and removal torque from cap diameter.
+            </p>
+          </div>
+
+          <div className="flex justify-center gap-2 flex-wrap" role="group" aria-label="Choose view mode">
+            <Button
+              variant={viewMode === "operator" ? "default" : "outline"}
+              className="h-9 px-4 text-sm"
+              aria-pressed={viewMode === "operator"}
+              onClick={() => setViewMode("operator")}
+            >
+              Operator
+            </Button>
+            <Button
+              variant={viewMode === "debug" ? "default" : "outline"}
+              className="h-9 px-4 text-sm"
+              aria-pressed={viewMode === "debug"}
+              onClick={() => setViewMode("debug")}
+            >
+              Dev
+            </Button>
+          </div>
         </header>
 
-        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="flex-1 min-h-0">
           {viewMode === "operator" ? renderOperatorMode() : renderDebugMode()}
         </div>
       </div>

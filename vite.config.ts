@@ -6,6 +6,7 @@ import path from 'path'
 export default defineConfig({
   // Use '/' for extension, '/torque-app/' for web deployment
   base: process.env.BUILD_TARGET === 'extension' ? '/' : '/torque-app/',
+  cacheDir: '.vite',
   plugins: [react()],
   resolve: {
     alias: {
