@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { Info, Calculator, Menu } from "lucide-react";
+import { Info, Calculator, Menu, ArrowLeft } from "lucide-react";
 
 // Reference ranges compiled from industry sources for common closure sizes (mm)
 // Values are application torque in in-lb.
@@ -335,7 +335,19 @@ export default function TorqueCalculator() {
     <>
         <Card className="shadow-sm">
           <CardHeader className="pb-3 sm:pb-6">
-            <CardTitle className="text-xl sm:text-2xl">Inputs</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl sm:text-2xl">Inputs</CardTitle>
+              <Button
+                variant="outline"
+                onClick={() => setViewMode("operator")}
+                className="h-10 px-4 flex items-center gap-2"
+                aria-label="Switch to operator mode"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span className="hidden sm:inline">Operator Mode</span>
+                <span className="sm:hidden">Operator</span>
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-6 sm:gap-4 sm:grid-cols-2">
             <div className="space-y-4 sm:space-y-3">
