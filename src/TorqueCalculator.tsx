@@ -279,6 +279,37 @@ export default function TorqueCalculator() {
     }
   };
 
+  const ViewModeSlider = () => (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
+            Debug mode
+          </p>
+          <p className="text-xs text-slate-500">
+            Slide to reveal advanced controls
+          </p>
+        </div>
+        <span className="text-lg font-semibold">
+          {viewMode === "debug" ? "On" : "Off"}
+        </span>
+      </div>
+      <Slider
+        min={0}
+        max={1}
+        step={1}
+        value={[viewMode === "debug" ? 1 : 0]}
+        onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
+        aria-label="Toggle debug mode"
+        className="touch-manipulation"
+      />
+      <div className="flex justify-between text-xs text-slate-400">
+        <span>Operator</span>
+        <span>Dev</span>
+      </div>
+    </div>
+  );
+
   const renderOperatorMode = () => (
     <div className="space-y-2 sm:space-y-3 pb-4">
       <Card className="shadow-sm">
@@ -495,33 +526,7 @@ export default function TorqueCalculator() {
         </CardHeader>
         {settingsOpen && (
           <CardContent className="space-y-6 pt-0">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
-                    Debug mode
-                  </p>
-                  <p className="text-xs text-slate-500">
-                    Slide to reveal advanced controls
-                  </p>
-                </div>
-                <span className="text-lg font-semibold">
-                  {viewMode === "debug" ? "On" : "Off"}
-                </span>
-              </div>
-              <Slider
-                min={0}
-                max={1}
-                step={1}
-                value={[viewMode === "debug" ? 1 : 0]}
-                onValueChange={(val) => setViewMode(val[0] === 1 ? "debug" : "operator")}
-                aria-label="Toggle debug mode"
-              />
-              <div className="flex justify-between text-xs text-slate-400">
-                <span>Operator</span>
-                <span>Debug</span>
-              </div>
-            </div>
+            <ViewModeSlider />
 
             <div className="space-y-2">
               <p className="text-sm uppercase tracking-wide text-slate-500 font-semibold">
@@ -556,6 +561,9 @@ export default function TorqueCalculator() {
             <CardTitle className="text-xl sm:text-2xl">Inputs</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-6 sm:gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <ViewModeSlider />
+            </div>
             <div className="space-y-4 sm:space-y-3">
             <Label htmlFor="diameter" className="text-base sm:text-base block mb-2">
               Cap diameter (mm)
