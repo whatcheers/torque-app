@@ -4,8 +4,8 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
-  cacheDir: '.vite',
+  // Use '/' for extension, '/torque-app/' for web deployment
+  base: process.env.BUILD_TARGET === 'extension' ? '/' : '/torque-app/',
   plugins: [react()],
   resolve: {
     alias: {

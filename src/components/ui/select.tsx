@@ -69,12 +69,17 @@ SelectContent.displayName = SelectPrimitive.Content.displayName
 
 const SelectValue = SelectPrimitive.Value
 
+type SelectItemProps = React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+  value: string
+}
+
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
->(({ className, children, ...props }, ref) => (
+  SelectItemProps
+>(({ className, children, value, ...props }, ref) => (
   <SelectPrimitive.Item
     ref={ref}
+    value={value}
       className={cn(
         "relative flex w-full cursor-default select-none items-center rounded-sm py-4 sm:py-1.5 px-4 sm:px-2 text-base sm:text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 min-h-[52px] sm:min-h-[36px]",
         className
